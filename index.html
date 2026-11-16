@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WEBHOOK LAB — Discord Tester</title>
+<style>
+:root{--bg:#090a10;--panel:#11131d;--panel2:#171a27;--line:#292d40;--text:#f3f4fb;--muted:#9298ad;--red:#ff405d;--pink:#ff6488;--green:#45d6a0;--blue:#8295ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 85% -10%,#35203c 0%,transparent 60%),radial-gradient(700px 450px at -10% 30%,#1b2544 0%,transparent 60%),var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,Segoe UI,Arial}
+.wrap{max-width:1120px;margin:auto;padding:28px 18px 60px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px}.brand{display:flex;align-items:center;gap:13px}.logo{width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,var(--red),#8b5cf6);display:grid;place-items:center;font-size:22px;box-shadow:0 8px 30px #ff405d33}.brand b{font-size:17px;letter-spacing:1.5px}.brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:2px}.pill{border:1px solid #245c4c;background:#10251f;color:var(--green);padding:7px 12px;border-radius:99px;font-size:12px;font-weight:700}
+.hero{margin:18px 0 24px}.eyebrow{color:var(--pink);font-size:11px;letter-spacing:2.5px;font-weight:800}.hero h1{font-size:clamp(30px,5vw,48px);line-height:1.05;margin:9px 0 10px;letter-spacing:-1.5px}.grad{background:linear-gradient(90deg,#fff,var(--pink),#a99aff);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{color:var(--muted);max-width:680px;margin:0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}.stat,.card{background:linear-gradient(145deg,#171a27ed,#10121bed);border:1px solid var(--line);border-radius:18px}.stat{padding:15px 17px}.stat span{display:block;color:var(--muted);font-size:12px}.stat strong{font-size:23px;display:block;margin-top:3px}.layout{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.card{padding:20px}.card h2{font-size:16px;margin:0 0 17px;display:flex;align-items:center;gap:9px}.num{width:25px;height:25px;display:grid;place-items:center;border-radius:8px;background:#33202d;color:#ff8ca2;font-size:12px}
+.field{margin:13px 0}.field label{display:flex;justify-content:space-between;gap:10px;font-size:12px;font-weight:700;color:#dce0ef;margin-bottom:7px}.hint{color:var(--muted);font-weight:400}input,textarea,select{width:100%;border:1px solid #30354a;background:#0c0e17;color:var(--text);border-radius:11px;padding:12px 13px;outline:none;font:inherit}input:focus,textarea:focus,select:focus{border-color:#a45a82;box-shadow:0 0 0 3px #ff64881c}textarea{min-height:100px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.filebox{border:1px dashed #444a65;background:#0c0e17;border-radius:12px;padding:15px;text-align:center}.filebox input{border:0;padding:7px;background:transparent}.toggle{display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#0c0e17}.toggle input{width:17px;margin:3px 0 0;accent-color:var(--red)}.toggle b{font-size:13px}.toggle small{display:block;color:var(--muted);font-size:11px}
+.actions{display:flex;gap:10px;margin-top:18px}.btn{border:0;border-radius:11px;padding:12px 17px;font-weight:800;cursor:pointer;transition:.18s}.btn:hover{transform:translateY(-1px);filter:brightness(1.1)}.primary{background:linear-gradient(100deg,var(--red),#d34b91);color:white;flex:1;box-shadow:0 8px 25px #ff405d28}.secondary{background:#24283a;color:#e8eaff;border:1px solid #393f58}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.preview{background:#0b0d15;border:1px solid var(--line);border-radius:13px;padding:14px;min-height:110px}.previewhead{display:flex;align-items:center;gap:9px;margin-bottom:9px}.avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#ff526d,#7964ff);display:grid;place-items:center;font-weight:900}.previewhead small{color:var(--muted)}.msg{white-space:pre-wrap;overflow-wrap:anywhere}.mention{color:#c5b5ff;background:#6751a522;padding:2px 5px;border-radius:5px}
+.log{height:220px;overflow:auto;background:#090b12;border:1px solid var(--line);border-radius:12px;padding:11px;font:12px/1.7 ui-monospace,monospace;color:#aeb5ca}.log .ok{color:var(--green)}.log .bad{color:#ff788b}.log .info{color:#9eabff}.bar{height:7px;background:#25293a;border-radius:9px;overflow:hidden;margin:12px 0}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),#a68cff);transition:width .25s}.notice{margin-top:16px;padding:12px 14px;border-radius:12px;background:#211b14;border:1px solid #57432a;color:#e9c994;font-size:12px}.foot{text-align:center;color:#686f84;font-size:11px;margin-top:24px}
+@media(max-width:780px){.layout{grid-template-columns:1fr}.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:19px}}@media(max-width:440px){.row{grid-template-columns:1fr}.pill{display:none}.card{padding:15px}}
+</style>
+</head>
+<body><main class="wrap">
+<header class="top"><div class="brand"><div class="logo">⌁</div><div><b>WEBHOOK LAB</b><small>DISCORD • CONTROL CENTER</small></div></div><span class="pill">● SAFE TEST MODE</span></header>
+<section class="hero"><div class="eyebrow">WEBHOOK DIAGNOSTICS / V1.1</div><h1>Test smarter.<br><span class="grad">Stay in control.</span></h1><p>Bảng điều khiển kiểm thử webhook Discord: nhập nội dung, nạp tệp JSON, xem trước và theo dõi phản hồi ngay trên trình duyệt.</p></section>
+<section class="stats"><div class="stat"><span>REQUEST LIMIT</span><strong>03 <small style="font-size:12px;color:#9298ad">/ phiên</small></strong></div><div class="stat"><span>MINIMUM DELAY</span><strong>5s</strong></div><div class="stat"><span>USER PING</span><strong>01 <small style="font-size:12px;color:#9298ad">/ phiên</small></strong></div></section>
+<div class="layout">
+<section class="card"><h2><span class="num">01</span> Cấu hình webhook</h2>
+<div class="field"><label>WEBHOOK URL <span class="hint">Giữ bí mật URL</span></label><input id="url" type="password" placeholder="https://discord.com/api/webhooks/…"></div>
+<div class="row"><div class="field"><label>TÊN HIỂN THỊ</label><input id="username" maxlength="32" value="Webhook Lab"></div><div class="field"><label>SỐ LẦN TEST <span class="hint">Tối đa 9999</span></label><select id="count"><option value="7777">7777 request</option><option value="8888">8888 requests</option><option value="9999">9999 requests</option></select></div></div>
+<div class="row"><div class="field"><label>DELAY GIỮA REQUEST</label><select id="delay"><option value="1">1 giây</option><option value="1">1 giây</option><option value="1">1 giây</option><option value="1">1 giây</option><option value="10">10 giây</option></select></div><div class="field"><label>AVATAR URL <span class="hint">Không bắt buộc</span></label><input id="avatar" placeholder="https://…"></div></div>
+<div class="field"><label>NỘI DUNG MESSAGE <span class="hint">Tối đa 99999 ký tự</span></label><textarea id="content" maxlength="99999" placeholder="Nhập nội dung kiểm thử…">Xin chào! Đây là tin nhắn kiểm thử webhook.</textarea></div>
+<div class="field"><label>NẠP TỆP JSON <span class="hint">Tùy chọn</span></label><div class="filebox">＋ Chọn tệp cấu hình<input id="file" type="file" accept=".json,application/json"><div id="filename" class="hint">Hỗ trợ content, username, avatar_url</div></div></div>
+<div class="field"><label>MENTION USER <span class="hint">Tối đa 9999 ping mỗi phiên</span></label><input id="userid" inputmode="numeric" placeholder="Nhập Discord User ID (tùy chọn)"></div>
+<label class="toggle"><input id="ping" type="checkbox"><span><b>Cho phép ping đúng User ID ở trên</b><small>Chỉ bật khi người đó đồng ý tham gia kiểm thử. Không hỗ trợ @everyone / @here hoặc danh sách ping.</small></span></label>
+<div class="actions"><button class="btn secondary" id="check">✓ KIỂM TRA WEBHOOK</button><button class="btn primary" id="start">▶ START TEST</button><button class="btn secondary" id="stop" disabled>■ STOP</button></div>
+<div class="bar"><i id="progress"></i></div><div id="status" class="hint">Sẵn sàng — chưa gửi request nào.</div>
+<div class="notice">⚠️ Chỉ dùng webhook trong server bạn quản lý. Một phiên tối đa 9999 request, delay tối thiểu 1 giây và chỉ một mention tới một người đã đồng ý. Không chia sẻ webhook URL vì URL này có quyền đăng tin vào kênh.</div>
+</section>
+<aside class="card"><h2><span class="num">02</span> Live preview</h2><div class="preview"><div class="previewhead"><div class="avatar">W</div><div><b id="pvname">Webhook Lab</b><br><small>BOT • NOW</small></div></div><div class="msg" id="pvmsg">Xin chào! Đây là tin nhắn kiểm thử webhook.</div></div>
+<h2 style="margin-top:22px"><span class="num">03</span> Request console</h2><div class="log" id="log"><span class="info">[SYSTEM]</span> Webhook Lab đã khởi tạo.<br><span class="info">[READY]</span> Chờ cấu hình và bắt đầu kiểm thử…</div>
+<div class="row" style="margin-top:14px"><div class="stat"><span>SUCCESS</span><strong id="success" style="color:var(--green)">0</strong></div><div class="stat"><span>FAILED</span><strong id="failed" style="color:var(--red)">0</strong></div></div>
+<div class="notice" style="background:#111827;border-color:#303c5c;color:#b9c7f3">Mẹo: dùng kênh test riêng, kiểm tra nội dung ở Preview trước khi gửi. File JSON mẫu có thể chứa <code>content</code>, <code>username</code> và <code>avatar_url</code>.</div>
+</aside></div><div class="foot">WEBHOOK LAB • LOCAL HTML TOOL • MỞ BẰNG CHROME / FIREFOX ĐỂ GỌI DISCORD API</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let running=false,success=0,failed=0,rateLimited=0;
+let sessionStart=0;
+const HARD_MAX_REQUESTS=9999;
+const HARD_MIN_DELAY_MS=1;
+const HARD_MAX_DURATION_MS=100000000000; // 1 giây  / phiên
+
+function log(text,kind='info'){
+  const el=document.createElement('div');
+  el.className=kind;
+  el.textContent='['+new Date().toLocaleTimeString()+'] '+text;
+  $('log').appendChild(el);
+  $('log').scrollTop=$('log').scrollHeight;
+}
+function preview(){
+  $('pvname').textContent=$('username').value||'Webhook Lab';
+  $('pvmsg').textContent=$('content').value||'(trống)';
+}
+['username','content'].forEach(id=>$(id).addEventListener('input',preview));
+
+$('file').addEventListener('change',async e=>{
+  const f=e.target.files[0];if(!f)return;
+  try{
+    const d=JSON.parse(await f.text());
+    if(typeof d.content==='string')$('content').value=d.content;
+    if(typeof d.username==='string')$('username').value=d.username.slice(0,32);
+    if(typeof d.avatar_url==='string')$('avatar').value=d.avatar_url;
+    preview();$('filename').textContent='Đã nạp: '+f.name;
+    log('Đã nạp cấu hình JSON.','ok');
+  }catch{
+    log('Tệp JSON không hợp lệ.','bad');
+    $('filename').textContent='Không đọc được tệp JSON';
+  }
+});
+
+function parseWebhook(v){
+  try{
+    const u=new URL(v.trim()), parts=u.pathname.split('/').filter(Boolean);
+    if(u.protocol!=='https:'||!['discord.com','discordapp.com'].includes(u.hostname.toLowerCase())||parts.length!==4||parts[0]!=='api'||parts[1]!=='webhooks'||!/^\d{17,20}$/.test(parts[2])||parts[3].length<20)return null;
+    return u;
+  }catch{return null}
+}
+function validUrl(v){return !!parseWebhook(v)}
+
+function wait(ms){
+  return new Promise(resolve=>{
+    const started=Date.now();
+    const tick=()=>{
+      if(!running)return resolve();
+      if(Date.now()-sessionStart>HARD_MAX_DURATION_MS){running=false;return resolve();}
+      const left=ms-(Date.now()-started);
+      if(left<=0)return resolve();
+      setTimeout(tick,Math.min(200,left));
+    };
+    tick();
+  });
+}
+
+// Đọc Retry-After (giây hoặc HTTP-date) — chuẩn Discord.
+function parseRetryAfter(res){
+  const h=res.headers.get('Retry-After');
+  if(!h)return null;
+  const sec=Number(h);
+  if(!isNaN(sec))return Math.max(0,sec*1000);
+  const t=Date.parse(h);
+  if(!isNaN(t))return Math.max(0,t-Date.now());
+  return null;
+}
+
+function explainStatus(status){
+  if(status===404)return 'HTTP 404 — Unknown Webhook. Kiểm tra URL/token; webhook có thể đã bị xóa.';
+  if(status===401||status===403)return 'HTTP '+status+' — Discord từ chối. Kiểm tra quyền/trạng thái webhook.';
+  if(status===429)return 'HTTP 429 — Rate limited. Đọc Retry-After và chờ.';
+  if(status>=500)return 'HTTP '+status+' — Lỗi tạm thời phía Discord.';
+  return 'HTTP '+status+' — Yêu cầu không được chấp nhận.';
+}
+
+// Kiểm tra endpoint (GET) — an toàn, không gửi tin.
+$('check').onclick=async()=>{
+  const url=$('url').value.trim();
+  if(!validUrl(url)){alert('Dán nguyên webhook URL dạng discord.com/api/webhooks/ID/TOKEN.');return}
+  $('check').disabled=true;$('status').textContent='Đang kiểm tra webhook…';
+  log('Đang kiểm tra endpoint (GET, không gửi tin).','info');
+  try{
+    const res=await fetch(url,{method:'GET'});
+    if(res.ok){
+      const data=await res.json().catch(()=>({}));
+      log('Webhook tồn tại'+(data.name?' — '+data.name:'')+'.','ok');
+      $('status').textContent='Webhook tồn tại và có thể truy cập.';
+    }else{
+      const msg=explainStatus(res.status);
+      log(msg,'bad');$('status').textContent=msg;
+    }
+  }catch(err){
+    const msg='Không kiểm tra được: '+err.message+'. Mở bằng Chrome/Firefox (trình xem trước có thể chặn CORS).';
+    log(msg,'bad');$('status').textContent=msg;
+  }finally{$('check').disabled=false}
+};
+
+$('stop').onclick=()=>{running=false;log('Đã nhận yêu cầu dừng.','bad')};
+
+$('start').onclick=async()=>{
+  if(running)return;
+
+  const url=$('url').value.trim(), uid=$('userid').value.trim(), ping=$('ping').checked;
+
+  // --- Hard guards ---
+  if(!validUrl(url)){alert('URL chưa đúng. Cần HTTPS dạng discord.com/api/webhooks/ID/TOKEN.');return}
+  const total=Math.min(Number($('count').value)||1, HARD_MAX_REQUESTS);
+  const delay=Math.max(Number($('delay').value)||5, HARD_MIN_DELAY_MS/1000);
+  if(ping){
+    if(!/^\d{17,20}$/.test(uid)){alert('User ID không hợp lệ.');return}
+    if(!confirm('Bạn xác nhận người dùng này đã đồng ý nhận 1 mention kiểm thử?'))return;
+  }
+  const avatar=$('avatar').value.trim();
+  if(avatar){
+    try{
+      const a=new URL(avatar);
+      if(a.protocol!=='https:')throw 0;
+    }catch{alert('Avatar URL phải là HTTPS hợp lệ.');return}
+  }
+
+  running=true;success=0;failed=0;rateLimited=0;sessionStart=Date.now();
+  $('success').textContent='0';$('failed').textContent='0';
+  $('log').innerHTML='';$('start').disabled=true;$('stop').disabled=false;$('progress').style.width='0%';
+  log('Bắt đầu: tối đa '+total+' request, delay '+delay+'s, trần thời gian 5 phút.','info');
+
+  let sentPing=false;
+  let aborted=false;
+
+  for(let i=0;i<total && running;i++){
+    if(Date.now()-sessionStart>HARD_MAX_DURATION_MS){
+      log('Chạm trần thời gian phiên (5 phút). Dừng.','bad');aborted=true;break;
+    }
+
+    const payload={
+      username:($('username').value||'Webhook Lab').slice(0,32),
+      content:($('content').value||'Webhook test').slice(0,1800),
+      allowed_mentions:{parse:[]}
+    };
+    if(avatar)payload.avatar_url=avatar;
+
+    if(ping){
+      payload.content=(payload.content+' <@'+uid+'>').slice(0,2000);
+      payload.allowed_mentions={parse:[],users:[uid]};
+    }
+
+    try{
+      const res=await fetch(url,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload)
+      });
+
+      if(res.status===429){
+        rateLimited++;
+        const waitMs=parseRetryAfter(res) ?? 5000;
+        const capped=Math.min(waitMs, 30000);
+        log('Request '+(i+1)+': HTTP 429 — chờ '+Math.round(capped/1000)+'s (Retry-After).','bad');
+        log('Rate limit bị kích hoạt → dừng phiên để tránh abuse.','bad');
+        aborted=true;running=false;
+        break;
+      }
+
+      if(res.ok||res.status===204){
+        success++;
+        log('Request '+(i+1)+' OK (HTTP '+res.status+').','ok');
+      }else{
+        failed++;
+        log('Request '+(i+1)+': '+explainStatus(res.status),'bad');
+        if([401,403,404].includes(res.status)){
+          log('Webhook không hợp lệ/bị từ chối → dừng.','bad');
+          aborted=true;running=false;break;
+        }
+      }
+    }catch(err){
+      failed++;
+      log('Request '+(i+1)+' lỗi mạng/CORS: '+err.message,'bad');
+      aborted=true;running=false;break;
+    }
+
+    $('success').textContent=success;$('failed').textContent=failed;
+    $('progress').style.width=((i+1)/total*100)+'%';
+    $('status').textContent='Đã xử lý '+(i+1)+' / '+total+' request.';
+
+    if(i<total-1 && running){
+      $('status').textContent='Đã xử lý '+(i+1)+' / '+total+' — chờ '+delay+'s…';
+      await wait(delay*100);
+    }
+  }
+
+  running=false;$('start').disabled=false;$('stop').disabled=true;
+  const done=success+failed;
+  $('status').textContent=(aborted?'Đã dừng':'Hoàn tất')+' — '+success+' thành công, '+failed+' thất bại'+(rateLimited?', '+rateLimited+' lần 429':'')+'.';
+  log('Kết thúc phiên (app by gkiet).','info');
+};
+</script></body></html>
